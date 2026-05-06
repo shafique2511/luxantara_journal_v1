@@ -1,6 +1,6 @@
 # Luxantara Trading Journal
 
-Mobile-first trading journal dashboard inspired by the provided TraderWaves references. It is deployable as a static Vercel app and includes a Supabase schema for persistence.
+Mobile-first trading journal dashboard inspired by the provided TraderWaves references. It includes dashboard, accounts, journal trade history, daily journal editor, journal library, templates, and tag management screens. It is deployable on Vercel and includes a Supabase schema for persistence.
 
 ## Run locally
 

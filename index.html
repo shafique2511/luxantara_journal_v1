@@ -19,6 +19,9 @@
         <button class="nav-sub" data-view="news">News</button>
         <button class="nav-sub" data-view="create">Create</button>
         <button class="nav-item" data-view="journal"><span>✎</span>Journal</button>
+        <button class="nav-sub journal-sub active" data-view="journal">Trade History</button>
+        <button class="nav-sub journal-sub" data-view="journal-daily">Daily Journal</button>
+        <button class="nav-sub journal-sub" data-view="journal-library">Library</button>
         <button class="nav-item" data-view="accounts"><span>▣</span>Accounts</button>
         <button class="nav-item" data-view="leaderboard"><span>▥</span>Leaderboard</button>
         <button class="nav-item" data-view="sync"><span>↗</span>Trade Sync</button>
@@ -158,6 +161,94 @@
           </article>
         </section>
 
+        <section class="journal-page hidden" id="journalView">
+          <div class="journal-head">
+            <div class="journal-tabs" role="tablist">
+              <button class="active" data-journal-section="history">Trade History</button>
+              <button data-journal-section="daily">Daily Journal</button>
+              <button data-journal-section="library">Library</button>
+            </div>
+            <div class="journal-filters">
+              <button class="date-filter"><span class="coin"></span><strong>REAL</strong> - Grow Cent</button>
+              <button class="date-filter">Apr 30, 2026 - Today <strong>All</strong></button>
+              <button class="icon-button">F</button>
+              <button class="icon-button">D</button>
+            </div>
+          </div>
+
+          <div class="journal-section" id="journalHistory">
+            <article class="card journal-summary">
+              <div class="summary-top">
+                <div>
+                  <small>NET P&amp;L</small>
+                  <h2 class="gain">+54.85</h2>
+                  <span>Account Overview</span>
+                </div>
+                <div class="summary-trend">0.86%</div>
+              </div>
+              <div class="overview-grid">
+                <div><small>Start Balance</small><b>USC 6,365.59</b></div>
+                <div><small>End Balance</small><b>USC 6,420.44</b></div>
+                <div><small>Deposit</small><b>USC 0.00</b></div>
+              </div>
+              <div class="journal-stats">
+                <h3>Trade Stats</h3>
+                <div class="trade-pill-row">
+                  <div class="blue-pill"><b>0</b><span>Buys</span></div>
+                  <div class="red-pill"><b>8</b><span>Sells</span></div>
+                  <div><b>8</b><span>Trades</span></div>
+                </div>
+                <p><span>Best Trade</span><b class="gain">USC 20.95</b></p>
+                <p><span>Worst Trade</span><b class="loss">-USC 7.30</b></p>
+                <p><span>Avg Hold Time</span><b>4 min</b></p>
+                <p><span>Max Balance Drawdown</span><b>USC 21.30</b></p>
+                <p><span>Fees</span><b>USC 0.00</b></p>
+                <p><span>Winrate</span><b>50%</b></p>
+                <p><span>Profit Factor</span><b class="gain">2.84</b></p>
+                <p><span>Expectancy</span><b class="gain">6.86</b></p>
+              </div>
+              <button class="journal-day-button" id="toggleEditor">Journal My Day</button>
+            </article>
+
+            <article class="card journal-chart-card">
+              <div class="journal-chart-tabs"><button class="active">Balance</button><button>Profit</button></div>
+              <div class="daily-balance-chart"></div>
+              <div class="axis"><span>08:00</span><span>15:10</span><span>15:10</span><span>15:12</span><span>7</span></div>
+            </article>
+
+            <article class="journal-editor card hidden" id="dailyEditor">
+              <div class="editor-toolbar">
+                <button>Undo</button><button>Redo</button><button>B</button><button>I</button><button>U</button><button>S</button>
+                <button>A</button><button>H</button><button>List</button><button>Quote</button><button>Image</button>
+              </div>
+              <textarea placeholder="Write your daily notes here..."></textarea>
+            </article>
+
+            <div class="trade-table-wrap">
+              <div class="trade-table" id="tradeTable"></div>
+              <div class="columns-rail">Columns</div>
+            </div>
+          </div>
+
+          <div class="journal-section hidden" id="journalLibrary">
+            <div class="library-tabs">
+              <button class="active" data-library-tab="trades">Trade Journals</button>
+              <button data-library-tab="daily">Daily Journals</button>
+              <button data-library-tab="strategy">Strategy Section</button>
+              <button data-library-tab="templates">Templates</button>
+            </div>
+            <div class="library-shell">
+              <aside class="library-panel">
+                <div class="library-title"><span id="libraryTitle">Trades</span><button>+ New</button></div>
+                <div class="segmented hidden" id="templateSegment"><button class="active">Trade</button><button>Daily</button></div>
+                <label class="search-box">Search<input id="librarySearch" placeholder="Search by symbol..."></label>
+                <div class="empty-state"><strong id="emptyIcon">⌁</strong><span id="emptyText">No trades found for the selected period.</span></div>
+              </aside>
+              <section class="library-workspace" id="libraryWorkspace">Select a trade to start journaling</section>
+            </div>
+          </div>
+        </section>
+
         <section class="accounts-page hidden" id="accountsView">
           <div class="notice">Issues syncing? Try an account history repair 🔧</div>
           <div class="tabs"><button class="active">Accounts</button><button>Portfolios <b>Pro</b></button></div>
@@ -194,6 +285,20 @@
           </div>
           <div class="or">or</div>
           <button class="manual" value="manual">⊕ Add account manually</button>
+        </form>
+      </dialog>
+
+      <dialog id="tagDialog">
+        <form method="dialog" class="modal tag-modal">
+          <button class="close" value="cancel">x</button>
+          <h2>Create Tag</h2>
+          <label>Tag Name<input placeholder="e.g Breakout"></label>
+          <span>Tag Color</span>
+          <div class="swatches"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="color-box"></div>
+          <div class="hue-bar"></div>
+          <div class="tag-preview">Tag Preview</div>
+          <footer><button value="cancel">Cancel</button><button value="create">Create</button></footer>
         </form>
       </dialog>
     </div>
