@@ -103,7 +103,7 @@ export default function HomePage() {
 
       <main className="main">
         <header className="topbar">
-          <button className="icon-button" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>Menu</button>
+          <button className="icon-button" id="menuButton" aria-label="Open sidebar" onClick={() => setSidebarOpen(true)}>Menu</button>
           <div className="brand compact">TRADER<span>WAVES</span></div>
           <div className="top-actions">
             <button className="pro">Go Pro</button>
@@ -227,8 +227,15 @@ function Dashboard() {
       <article className="card performance">
         <div className="card-title">Performance</div>
         <div className="pnl">
-          <div><small>Gain %</small><strong className="loss">-98.89%</strong><span className="loss">-$131.21% Abs</span></div>
-          <div><small>NET P&amp;L</small><strong className="gain">+USC 3,643.54</strong></div>
+          <div>
+            <small>Gain %</small>
+            <strong className="loss">-98.89%</strong>
+            <span className="loss">-$131.21% Abs</span>
+          </div>
+          <div>
+            <small>NET P&amp;L</small>
+            <strong className="gain">+USC 3,643.54</strong>
+          </div>
         </div>
         <div className="returns">
           <div><small>Daily</small><b className="loss">-47.42%</b></div>
@@ -237,25 +244,65 @@ function Dashboard() {
           <div><small>Annualised Return</small><b className="loss">-100.00%</b></div>
         </div>
         <div className="stat-list">
-          {["Risk", "Capital Flows", "Statistics", "Trade Stats"].map((heading) => <h3 key={heading}>{heading}</h3>)}
+          <h3>Risk</h3>
+          <p><span>Max Balance Drawdown</span><b className="loss">99.49%</b></p>
+          <p><span>Max Equity Drawdown</span><b>----</b></p>
+          <p><span>Current Equity</span><b>USC 6,420.44</b></p>
           <p><span>Current Balance</span><b>USC 6,420.44</b></p>
+          <p><span>Highest Balance</span><b>USC 6,420.44</b></p>
+          <h3>Capital Flows</h3>
+          <p><span>Deposits / Withdrawals</span><b>USC 2,776.90 / USC 0.00</b></p>
+          <p><span>Commissions &amp; Swap</span><b>USC 0.00 / USC 0.00</b></p>
           <p><span>Total Lots</span><b>37.01</b></p>
+          <h3>Statistics</h3>
           <p><span>Profit Factor</span><b className="gain">3.10</b></p>
+          <p><span>Expectancy</span><b>USC 2.86</b></p>
+          <p><span>Standard Deviation</span><b>USC 12.23</b></p>
+          <p><span>Sharpe Ratio</span><b className="loss">-0.13</b></p>
+          <h3>Trade Stats</h3>
           <p><span>Win rate %</span><b className="gain">76.9%</b></p>
+          <p><span>Profit Factor</span><b className="gain">3.10</b></p>
+          <p><span>Avg Win / Avg Loss</span><b>USC 77.8 / <i className="loss">USC 19.92</i></b></p>
           <p><span>Avg Trade Duration</span><b>9m</b></p>
         </div>
       </article>
-      <article className="card compact-chart"><div className="card-title">Trade Count <b>1274</b></div><div className="sparkline small" /></article>
-      <article className="card streak"><div className="card-title">Winstreak</div><div className="streak-row"><div><strong>5</strong><span>Days</span><small>Best 5</small></div><div><strong>4</strong><span>Trades</span><small>Best 242</small></div></div></article>
-      <ChartCard title="Balance" amount="USC 6,420.44" />
-      <article className="card donut-card"><div className="card-title">Symbols Traded <button>All</button></div><h2>1</h2><div className="donut"><span><b>1,274</b>Trades</span></div><div className="legend"><span />XAUUSDc.va: 1,274 <b>100%</b></div></article>
-      <ChartCard title="Profit" amount="USC 3,643.54" profit />
+
+      <article className="card compact-chart">
+        <div className="card-title">Trade Count <b>1274</b></div>
+        <div className="sparkline small" />
+      </article>
+
+      <article className="card streak">
+        <div className="card-title">Winstreak</div>
+        <div className="streak-row">
+          <div><strong>5</strong><span>Days</span><small>Best 5</small></div>
+          <div><strong>4</strong><span>Trades</span><small>Best 242</small></div>
+        </div>
+      </article>
+
+      <ChartCard title="Balance" amount="USC 6,420.44" badge="+466.57%" />
+
+      <article className="card donut-card">
+        <div className="card-title">Symbols Traded <button>All</button></div>
+        <h2>1</h2>
+        <div className="donut"><span><b>1,274</b>Trades</span></div>
+        <div className="legend"><span />XAUUSDc.va: 1,274 <b>100%</b></div>
+      </article>
+
+      <ChartCard title="Profit" amount="USC 3,643.54" badge="1/2" profit />
     </section>
   );
 }
 
-function ChartCard({ title, amount, profit }: { title: string; amount: string; profit?: boolean }) {
-  return <article className="card chart-card"><div className="card-title">{title} <span className="badge">+466.57%</span><button>All</button></div><h2>{amount}</h2><div className={`area-chart ${profit ? "profit-line" : ""}`} /><div className="axis"><span>May</span><span>15:07</span><span>16:31</span><span>5</span><span>6</span></div></article>;
+function ChartCard({ title, amount, badge, profit }: { title: string; amount: string; badge: string; profit?: boolean }) {
+  return (
+    <article className="card chart-card">
+      <div className="card-title">{title} <span className="badge">{badge}</span><button>All</button></div>
+      <h2>{amount}</h2>
+      <div className={`area-chart ${profit ? "profit-line" : ""}`} />
+      <div className="axis"><span>May</span><span>15:07</span><span>16:31</span><span>5</span><span>6</span></div>
+    </article>
+  );
 }
 
 function Journal(props: {
