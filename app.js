@@ -1,5 +1,6 @@
 const state = {
   activeView: "dashboard",
+  activeJournalSection: "history",
   supabase: null
 };
 
@@ -22,9 +23,7 @@ function toggleSidebar(force) {
 function setView(view) {
   state.activeView = view;
   const isJournal = view.startsWith("journal");
-  document.querySelectorAll("[data-view]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.view === view || (view === "metrics" && button.dataset.view === "dashboard") || (isJournal && button.dataset.view === "journal"));
-  });
+  updateNavigation(view);
 
   dashboardView.classList.toggle("hidden", view !== "dashboard" && view !== "metrics");
   accountsView.classList.toggle("hidden", view !== "accounts");
@@ -49,7 +48,19 @@ function setView(view) {
   if (window.innerWidth < 980) toggleSidebar(false);
 }
 
+function updateNavigation(view) {
+  document.querySelectorAll("[data-view]").forEach((button) => {
+    const target = button.dataset.view;
+    const isDashboardParent = target === "dashboard" && (view === "dashboard" || view === "metrics");
+    const isJournalParent = target === "journal" && view.startsWith("journal") && button.classList.contains("nav-item");
+    const isExactSubItem = target === view && !button.classList.contains("nav-item");
+    const isExactMainItem = target === view && button.classList.contains("nav-item") && !view.startsWith("journal");
+    button.classList.toggle("active", isDashboardParent || isJournalParent || isExactSubItem || isExactMainItem);
+  });
+}
+
 function setJournalSection(section) {
+  state.activeJournalSection = section;
   const showHistory = section === "history" || section === "daily";
   document.querySelector("#journalHistory").classList.toggle("hidden", !showHistory);
   document.querySelector("#journalLibrary").classList.toggle("hidden", section !== "library");
@@ -175,7 +186,14 @@ document.querySelectorAll("[data-view]").forEach((button) => {
 document.querySelector("#openPlatform").addEventListener("click", () => platformDialog.showModal());
 document.querySelector("#addAccountTop").addEventListener("click", () => platformDialog.showModal());
 document.querySelectorAll("[data-journal-section]").forEach((button) => {
-  button.addEventListener("click", () => setJournalSection(button.dataset.journalSection));
+  button.addEventListener("click", () => {
+    const sectionRoutes = {
+      history: "journal",
+      daily: "journal-daily",
+      library: "journal-library"
+    };
+    setView(sectionRoutes[button.dataset.journalSection]);
+  });
 });
 document.querySelectorAll("[data-library-tab]").forEach((button) => {
   button.addEventListener("click", () => setLibraryTab(button.dataset.libraryTab));
